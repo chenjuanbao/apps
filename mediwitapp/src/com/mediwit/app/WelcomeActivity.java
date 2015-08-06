@@ -29,7 +29,7 @@ public class WelcomeActivity extends Activity {
                     Intent intent = new Intent(WelcomeActivity.this, MainActivity.class);
                     WelcomeActivity.this.startActivity(intent);
                 } else {
-                    Intent intent = new Intent(WelcomeActivity.this, MainActivity.RoleSelActivity.class);
+                    Intent intent = new Intent(WelcomeActivity.this, RoleSelActivity.class);
                     WelcomeActivity.this.startActivity(intent);
                 }
                 finish();
