@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">医慧通</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="btn1">关注</string>
+    <string name="btn2">通讯录</string>
+    <string name="btn3">动态</string>
+    <string name="btn4">设置</string>
+    <string name="btnbagde">btnbagde</string>
+    <string name="timeTest">7/25-2015</string>
+    <string name="title_activity_welcome">WelcomeActivity</string>
+    <string name="title_activity_login">LoginActivity</string>
+    <string name="title_activity_select_role">SelectRoleActivity</string>
+    <string name="title_activity_role_sel">请选择角色</string>
+    <string name="role_doctor">医生用户</string>
+    <string name="role_patient">普通用户</string>
+
+    <string name="btn_ok">确认</string>
+</resources>
