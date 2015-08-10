@@ -17,6 +17,7 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
 import android.widget.TabWidget;
 import android.widget.TextView;
 
@@ -258,7 +259,7 @@ public class BadgeView extends TextView {
             }
             setBackgroundDrawable(badgeBg);
         }
-        applyLayoutParams();
+//        applyLayoutParams();
          
         if (animate) {
             this.startAnimation(anim);
@@ -330,38 +331,38 @@ public class BadgeView extends TextView {
          
     }
      
-    private void applyLayoutParams() {
-         
-        FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-         
-        switch (badgePosition) {
-        case POSITION_TOP_LEFT:
-            lp.gravity = Gravity.LEFT | Gravity.TOP;
-            lp.setMargins(badgeMarginH, badgeMarginV, 0, 0);
-            break;
-        case POSITION_TOP_RIGHT:
-            lp.gravity = Gravity.RIGHT | Gravity.TOP;
-            lp.setMargins(0, badgeMarginV, badgeMarginH, 0);
-            break;
-        case POSITION_BOTTOM_LEFT:
-            lp.gravity = Gravity.LEFT | Gravity.BOTTOM;
-            lp.setMargins(badgeMarginH, 0, 0, badgeMarginV);
-            break;
-        case POSITION_BOTTOM_RIGHT:
-            lp.gravity = Gravity.RIGHT | Gravity.BOTTOM;
-            lp.setMargins(0, 0, badgeMarginH, badgeMarginV);
-            break;
-        case POSITION_CENTER:
-            lp.gravity = Gravity.CENTER;
-            lp.setMargins(0, 0, 0, 0);
-            break;
-        default:
-            break;
-        }
-         
-        setLayoutParams(lp);
-         
-    }
+//    private void applyLayoutParams() {
+//
+//        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+//
+//        switch (badgePosition) {
+//        case POSITION_TOP_LEFT:
+//            lp.gravity = Gravity.LEFT | Gravity.TOP;
+//            lp.setMargins(badgeMarginH, badgeMarginV, 0, 0);
+//            break;
+//        case POSITION_TOP_RIGHT:
+//            lp.gravity = Gravity.RIGHT | Gravity.TOP;
+//            lp.setMargins(0, badgeMarginV, badgeMarginH, 0);
+//            break;
+//        case POSITION_BOTTOM_LEFT:
+//            lp.gravity = Gravity.LEFT | Gravity.BOTTOM;
+//            lp.setMargins(badgeMarginH, 0, 0, badgeMarginV);
+//            break;
+//        case POSITION_BOTTOM_RIGHT:
+//            lp.gravity = Gravity.RIGHT | Gravity.BOTTOM;
+//            lp.setMargins(0, 0, badgeMarginH, badgeMarginV);
+//            break;
+//        case POSITION_CENTER:
+//            lp.gravity = Gravity.CENTER;
+//            lp.setMargins(0, 0, 0, 0);
+//            break;
+//        default:
+//            break;
+//        }
+//
+//        setLayoutParams(lp);
+//
+//    }
  
     /**
      * Returns the target View this badge has been attached to.

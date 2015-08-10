@@ -33,7 +33,7 @@
             android:label="@string/title_activity_login" >
         </activity>
         <activity
-            android:name=".MainActivity$RoleSelActivity"
+            android:name=".RoleSelActivity"
             android:label="@string/title_activity_role_sel" >
         </activity>
     </application>

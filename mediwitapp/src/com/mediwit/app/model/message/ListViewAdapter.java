@@ -50,58 +50,51 @@ public class ListViewAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        Log.e("method", "getView");
-        final int selectID = position;
-        //自定义视图
-        try {
-            ListItemView listItemView = null;
-            if (convertView == null) {
-                listItemView = new ListItemView();
-                //获取list_item布局文件的视图
-                convertView = listContainer.inflate(R.layout.list_item, null);
-                //获取控件对象
-                listItemView.image = (RoundAngleImageView) convertView.findViewById(R.id.imageItem);
-                listItemView.title = (TextView) convertView.findViewById(R.id.titleItem);
-                listItemView.info = (TextView) convertView.findViewById(R.id.infoItem);
-                listItemView.time = (TextView) convertView.findViewById(R.id.titleTime);
+        ListItemView listItemView = null;
 
-                convertView.setId(position);
+        if (convertView == null) {
+            //获取list_item布局文件的视图
+            convertView = listContainer.inflate(R.layout.list_item, null);
 
-                convertView.setTag(listItemView);
-            } else {
-                listItemView = (ListItemView) convertView.getTag();
-            }
-            listItemView.image.setBackgroundResource((Integer) listItems.get(position).get("image"));
-            listItemView.title.setText((String) listItems.get(position).get("title"));
-            listItemView.info.setText((String) listItems.get(position).get("info"));
-            listItemView.time.setText((String) listItems.get(position).get("time"));
-            int num = (Integer) listItems.get(position).get("num");
-            if (num > 0) {
-                if (null == listItemView.badge) {
-                    listItemView.badge = new BadgeView(context, listItemView.image, 2);
-                }
-                String showNum;
-                if (num > 10) {
-                    showNum = "··";
-                } else {
-                    showNum = String.valueOf(num);
-                }
-                listItemView.badge.setText(showNum);
-                listItemView.badge.show();
-            } else {
-                if (null != listItemView.badge) {
-                    listItemView.badge.hide();
-                }
-            }
-            listItemView.data = listItems.get(position);
-            Log.e("msg", (String) listItems.get(position).get("time"));
+            //获取控件对象
+            listItemView = new ListItemView();
+            listItemView.image = (RoundAngleImageView) convertView.findViewById(R.id.imageItem);
+            listItemView.title = (TextView) convertView.findViewById(R.id.titleItem);
+            listItemView.info = (TextView) convertView.findViewById(R.id.infoItem);
+            listItemView.time = (TextView) convertView.findViewById(R.id.titleTime);
+            listItemView.badge = (BadgeView) convertView.findViewById(R.id.badge_view);
 
+            convertView.setId(position);
 
-        } catch (Exception e) {
-            Log.e("列表Item初始化错误", e.getMessage());
+            convertView.setTag(listItemView);
+        } else {
+            listItemView = (ListItemView) convertView.getTag();
         }
 
-//         convertView.setMinimumWidth(parent.getWidth());
+        Map<String, Object> map = listItems.get(position);
+        listItemView.image.setBackgroundResource((Integer) map.get("image"));
+        listItemView.title.setText((String) map.get("title"));
+        listItemView.info.setText((String) map.get("info"));
+        listItemView.time.setText((String) map.get("time"));
+
+        int num = (Integer) listItems.get(position).get("num");
+        if (num > 0) {
+            String showNum;
+            if (num > 10) {
+                showNum = "··";
+            } else {
+                showNum = String.valueOf(num);
+            }
+            listItemView.badge.setText(showNum);
+            listItemView.badge.show();
+        } else {
+            if (null != listItemView.badge) {
+                listItemView.badge.hide();
+            }
+        }
+        listItemView.data = listItems.get(position);
+        Log.e("msg", (String) listItems.get(position).get("time"));
+
         return convertView;
     }
 

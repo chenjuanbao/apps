@@ -7,31 +7,35 @@
         android:id="@+id/imageItem"
         android:layout_width="60dp"
         android:layout_height="60dp"
+        android:layout_margin="10dp"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:src="@drawable/ic_launcher" />
+        android:layout_alignParentTop="true" />
 
     <TextView
         android:id="@+id/titleItem"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/imageItem"
-        android:layout_toRightOf="@+id/imageItem"
-        android:text="我的世界" />
+        android:layout_toRightOf="@+id/imageItem" />
 
     <TextView
         android:id="@+id/titleTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_alignTop="@+id/imageItem"
-        android:text="12:23" />
+        android:layout_alignTop="@+id/imageItem" />
 
     <TextView
         android:id="@+id/infoItem"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/imageItem"
-        android:layout_toRightOf="@+id/imageItem"
-        android:text="hahahsldkfj;asdkjf;ajs" />
+        android:layout_toRightOf="@+id/imageItem" />
+
+    <com.mediwit.app.widget.BadgeView
+        android:id="@+id/badge_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/imageItem"
+        android:layout_alignRight="@+id/imageItem" />
 </RelativeLayout>

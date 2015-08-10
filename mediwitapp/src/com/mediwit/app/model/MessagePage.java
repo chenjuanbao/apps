@@ -275,13 +275,9 @@ class MyMenuItemClickListener implements OnMenuItemClickListener {
             listItemData.badge.hide();
 
         }else{
-
             num=1;
             numChange(num);
-            if(null==listItemData.badge){
-                listItemData.badge=new BadgeView(this.context,listItemData.image,2);
-                listItemData.badge.setText(String.valueOf(num));
-            }
+            listItemData.badge.setText(String.valueOf(num));
             listItemData.badge.show();
         }
         listItemData.data.put("num", num);
