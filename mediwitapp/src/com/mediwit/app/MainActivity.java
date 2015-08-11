@@ -1,96 +1,178 @@
 package com.mediwit.app;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
-import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.FragmentManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.mediwit.app.util.DatetimeUtils;
 import com.mediwit.app.widget.ButtonGroup;
-import com.mediwit.app.widget.ButtonGroupListener;
 import com.mediwit.app.constant.TableConstant;
 import com.mediwit.app.dao.ParsDao;
 import com.mediwit.app.db.DatabaseHelper;
-import com.mediwit.app.model.IpageChangeListener;
 import com.mediwit.app.model.MessagePage;
 import com.mediwit.app.user.UserPage;
 import com.mediwit.app.util.DeviceUuidFactory;
 import com.mediwit.app.util.StringUtil;
+import com.mediwit.app.widget.TabContainer;
 
-public class MainActivity extends Activity implements ButtonGroupListener, IpageChangeListener {
-    ButtonGroup btnPlace = null;
-    private View prvelay = null;
-    private MessagePage messagePage = null;
+public class MainActivity extends FragmentActivity {
     private UserPage userPage = null;
-    FrameLayout showPlace = null;
-    int btnHeight = 150;
-    int btnWidth = 800;
-    float hwPercent = 100 / 800F;
     ParsDao parsDao = null;
+
+
+
+    public static final int FRAGMENT_DISCOVERY = 0;
+    public static final int FRAGMENT_GAME = 1;
+    public static final int FRAGMENT_RANK = 2;
+    public static final int FRAGMENT_PERSONAL = 3;
+    private FragmentManager mFragmentManager = null;
+    private Fragment mFragment = null;
+
+    private MessagePage mHomeFragment;
+    private MessagePage mGameFragment;
+    private MessagePage mRankFragment;
+    private MessagePage mPersonalFragment;
+    private List<Fragment> mFragments = new ArrayList<Fragment>();
+
+    private TabContainer mTabContainer;
+
+    private ViewPager mViewPager;
+
+    private int mWindowWidth;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
         parsDao = new ParsDao(this.getApplicationContext());
 
         initActivity();
+
+        mHomeFragment = new MessagePage();
+        mGameFragment = new MessagePage();
+        mRankFragment = new MessagePage();
+        mPersonalFragment = new MessagePage();
+
+        mFragments.add(mHomeFragment);
+        mFragments.add(mGameFragment);
+        mFragments.add(mRankFragment);
+        mFragments.add(mPersonalFragment);
+
+        mViewPager = (ViewPager) findViewById(R.id.vp_content);
+        // mViewPager.setOffscreenPageLimit(2);
+        mViewPager.setAdapter(new FragmentStatePagerAdapter(getSupportFragmentManager()) {
+
+            @Override
+            public int getCount() {
+                return mFragments.size();
+            }
+
+            @Override
+            public Fragment getItem(int position) {
+                return mFragments.get(position);
+            }
+
+        });
+        mTabContainer = new TabContainer(getResources(),
+                findViewById(R.id.tab_btn_group),
+                mTabListener);
+
+
+        DisplayMetrics outMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(outMetrics);
+        mWindowWidth = outMetrics.widthPixels;
+        mTabContainer = new TabContainer(getResources(), findViewById(R.id.tab_btn_group),
+                mTabListener);
+        mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            private int mState = ViewPager.SCROLL_STATE_IDLE;
+            private int mPrePosition = 0;
+
+            @Override
+            public void onPageSelected(int position) {
+                if (mState == ViewPager.SCROLL_STATE_SETTLING) {
+                    mTabContainer.updateIndicator(position);
+                }
+            }
+
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                View tab = mTabContainer.getIndicator();
+                RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) tab.getLayoutParams();
+                layoutParams.width = mWindowWidth / 4;
+                layoutParams.leftMargin = position * (mWindowWidth / 4) + positionOffsetPixels / 4;
+                tab.setLayoutParams(layoutParams);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+                mState = state;
+            }
+        });
+    }
+
+    private TabContainer.TabListener mTabListener = new TabContainer.TabListener() {
+
+        @Override
+        public void onTabChange(View v) {
+            int viewId = v.getId();
+            if (viewId == R.id.discovery) {
+                jumpToFragment(mHomeFragment);
+            }
+            else if (viewId == R.id.game) {
+                jumpToFragment(mGameFragment);
+            }
+            else if (viewId == R.id.rank) {
+                jumpToFragment(mRankFragment);
+            }
+            else if (viewId == R.id.personal) {
+                jumpToFragment(mPersonalFragment);
+            }
+        }
+    };
+
+    private void jumpToFragment(Fragment fragment) {
+        if (fragment == mFragment) {
+            return;
+        }
+
+        Log.d("Simon", "jumpToFragment fragment: " + fragment);
+        mViewPager.setCurrentItem(mFragments.indexOf(fragment));
     }
 
     private void initActivity() {
         try {
-            setContentView(R.layout.activity_main);
-            DatabaseHelper dataBaseHelper = DatabaseHelper.getInst(this.getApplicationContext());
-            SQLiteDatabase db = dataBaseHelper.getWritableDatabase();
-            //获取用户角色,用户初始化按钮功能.
-
             String role = parsDao.getPars(TableConstant.PAR_USER_ROLE);
             if (StringUtil.isBlank(role)) {
-//                弹出选择角色
                 Intent intent = new Intent(MainActivity.this, RoleSelActivity.class);
-//                startActivity(intent);
                 startActivityForResult(intent, 2000);
             } else {
-                DisplayMetrics metric = new DisplayMetrics();
-                getWindowManager().getDefaultDisplay().getMetrics(metric);
-                int width = metric.widthPixels;  // 屏幕宽度（像素）
-                int height = metric.heightPixels;  // 屏幕高度（像素）
-//                btnWidth=width;
-                float density = metric.density;  // 屏幕密度（0.75 / 1.0 / 1.5）
-                int densityDpi = metric.densityDpi;  // 屏幕密度DPI（120 / 160 / 240）
-                btnPlace = (ButtonGroup) findViewById(R.id.buttonGroup);
-                Float heightF = new Float(width * hwPercent);
-                btnPlace.init(width, heightF.intValue());
-                btnPlace.addListener(this);
-                LinearLayout.LayoutParams btnlp = (LinearLayout.LayoutParams) btnPlace.getLayoutParams();
-//                android LinearLayout 代码样式边框
-                btnlp.height = btnHeight;
-                btnlp.topMargin = 1;
-                btnPlace.setLayoutParams(btnlp);
-                System.out.println("-----------------[" + width * hwPercent + "]----------------------");
-                showPlace = (FrameLayout) findViewById(R.id.showplace);
-                LinearLayout.LayoutParams showlp = (LinearLayout.LayoutParams) showPlace.getLayoutParams();
-                showlp.height = height - btnHeight;
-                showPlace.setLayoutParams(showlp);
-//                prvelay=(TextView)this.findViewById(R.id.l1);
-
-
-                //添加消息测试数据
-
+//                //添加消息测试数据
+//                DatabaseHelper dataBaseHelper = DatabaseHelper.getInst(this.getApplicationContext());
+//                SQLiteDatabase db = dataBaseHelper.getWritableDatabase();
+//                //获取用户角色,用户初始化按钮功能.
 //                String now= DatetimeUtils.getDateTime();
 //                String sql = "insert into message (title, content,type,fromId,fromName,num,reciveTime) values ('蛋糕','蛋糕好好吃,你也来一块?','1','sdfskdfjskjfdkjf','张磊',7,?)";
 //                db.execSQL(sql,new Object[]{now});
@@ -123,7 +205,7 @@ public class MainActivity extends Activity implements ButtonGroupListener, Ipage
                 }
 
 //                dataBaseHelper.getReadableDatabase().execSQL("");
-                onClick(MessagePage.class.getName());
+//                onClick(MessagePage.class.getName());
             }
             //
             String userId = parsDao.getSelfId();
@@ -150,6 +232,7 @@ public class MainActivity extends Activity implements ButtonGroupListener, Ipage
         return true;
     }
 
+    /*
     @Override
     public void onClick(String label) {
         System.out.println("选中的按钮：：：" + label);
@@ -207,11 +290,14 @@ public class MainActivity extends Activity implements ButtonGroupListener, Ipage
 
     }
 
+
     @Override
     public void change(String type, int value) {
         Log.e("info-num", type + ":" + value);
         this.btnPlace.setMessageNum(type, value);
     }
+
+    */
 
 
     @Override
