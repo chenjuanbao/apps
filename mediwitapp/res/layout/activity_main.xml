@@ -1,64 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:paddingBottom="0px"
-    android:paddingLeft="0px"
-    android:paddingRight="0px"
-    android:paddingTop="0px"
-    tools:context=".MainActivity">
+    android:orientation="vertical" >
 
-    <FrameLayout
-        android:id="@+id/showplace"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="29">
-        <TextView
-            android:id="@+id/l2"
-            android:layout_width="fill_parent"
+    <include
+        android:id="@+id/tab_btn_group"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/tab_height"
+        layout="@layout/tab_btn_group" />
 
-            android:layout_height="wrap_content"
-            android:background="@drawable/item_shape"
-            android:text="@string/btn2"
-            android:textColor="#ff0000"
-            android:textSize="50sp"
-            android:visibility="invisible" />
-
-        <TextView
-            android:id="@+id/l3"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/skin_msgbox_bg_top"
-
-            android:text="@string/btn3"
-            android:textSize="50sp"
-
-            android:visibility="invisible" />
-
-        <TextView
-            android:id="@+id/l4"
-            android:layout_width="fill_parent"
-
-            android:layout_height="wrap_content"
-
-            android:text="@string/btn4"
-
-            android:textSize="50sp"
-            android:visibility="invisible" />
-
-    </FrameLayout>
-
-    <com.mediwit.app.widget.ButtonGroup
-        android:id="@+id/buttonGroup"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="0px"
-
-        android:layout_marginTop="0px"
-        android:layout_weight="1"
-        android:background="@drawable/skin_msgbox_bg_top"
-
-        ></com.mediwit.app.widget.ButtonGroup>
+    <android.support.v4.view.ViewPager
+        android:id="@+id/vp_content"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
 
 </LinearLayout>

@@ -2,4 +2,10 @@
 
     <color name="black_overlay">#66000000</color>
 
+    <color name="tab_text_highlight_color">#ff6600</color>
+    <color name="tab_text_normal_color">#1c1c1c</color>
+    <color name="tab_text_normal_color2">#5c5c5c</color>
+    <color name="tab_indicator_highlight_color">#ff6600</color>
+    <color name="transparent">#00000000</color>
+
 </resources>
